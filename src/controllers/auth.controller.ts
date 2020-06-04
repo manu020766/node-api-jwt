@@ -32,12 +32,18 @@ export const signin = async (req:Request, res:Response) =>  {
 
         user.password = '😎' // ctrl + i
         res.header('auth-token', token).status(200).json(user)
-        // res.header('X-Powered-By', '').status(200).json({ user, token })
+        // res.header('X-Powered-By', 'devuelve el nombre de la plataforma server').status(200).json({ user, token })
     }
 
     res.status(400).json({ message: 'email y/o password están equivocados' })
 }
-export const profile = (req:Request, res:Response) =>  {
-    res.status(200).json({ message: 'profile'})
+export const profile = async (req:Request, res:Response) =>  {
+    const user = await User.findById(req.userId, { password:0 })
+
+    if (!user) return res.status(404).json({ message: 'No existe el usuario' })
+  
+    res.status(200).json(user)
 }
+
+//express express-validator o @hapi/joi para hacer validadciones de los datos de entrada
 
